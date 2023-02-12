@@ -1,11 +1,23 @@
 import socketio
-from eventHandlers.events import sioEvents
+import eventHandlers.events as events
 
-ipaddress = input("Ingrese la ip del servidor: ")
-port = input("ingrese el puerto del servidor: ")
-
+ipaddress = ""
+port = ""
+username = ""
 sio = socketio.Client()
 
-sioEvents(sio)
+def serverAddress():
+    global ipaddress, port, username, sio
 
-sio.connect("http://"+ipaddress+":"+port)
+    ipaddress = input("Ingrese la ip del servidor: ")
+    port = input("ingrese el puerto del servidor: ")
+    username = input("ingrese su nombre de usuario: ")
+
+    try:
+        events.connected(sio)
+        sio.connect("http://"+ipaddress+":"+port)
+    except:
+        print("No se encontró el servidor...")
+        serverAddress()
+
+serverAddress()
